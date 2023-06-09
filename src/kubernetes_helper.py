@@ -81,18 +81,9 @@ def convert_memory_metric(pretty_memory: str):
 
 def update_deployment(api: client.AppsV1Api, deployment_name: str, replicas_count: int):
     # patch the deployment
+    print(f"Patching {deployment_name=} with {replicas_count=}")
     resp = api.patch_namespaced_deployment_scale(
         name=deployment_name, namespace="default", body={"spec": {"replicas": replicas_count}}
     )
 
     print("\n[INFO] deployment's container image updated.\n")
-    print("%s\t%s\t\t\t%s\t%s" % ("NAMESPACE", "NAME", "REVISION", "IMAGE"))
-    print(
-        "%s\t\t%s\t%s\t\t%s\n"
-        % (
-            resp.metadata.namespace,
-            resp.metadata.name,
-            resp.metadata.generation,
-            resp.spec.template.spec.containers[0].image,
-        )
-    )
